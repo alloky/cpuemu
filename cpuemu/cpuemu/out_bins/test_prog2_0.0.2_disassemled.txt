@@ -1,0 +1,74 @@
+.stack_size 1024
+.text msg_0 Hello, user
+.text msg_1 Please, input a number
+.text msg_2 Calced factorial value:
+
+mew 
+movl r0 $msg_0
+call :fun_3
+
+:label_5
+movl r0 $msg_1
+call :fun_3
+in 
+call :fun_4
+movl r0 $msg_2
+call :fun_3
+out 
+jmp :label_5
+
+:fun_4
+popr r0
+popr rax
+pushr r0
+pushr rax
+push 1
+cmp 
+pop 
+pop 
+jle :label_6
+subl rax 1
+pushr rax
+pushr rax
+call :fun_4
+popr rbx
+popr rax
+subl rax 1
+pushr rbx
+pushr rax
+call :fun_4
+popr rax
+popr rbx
+addl rbx rax
+popr r0
+pushr rbx
+pushr r0
+ret 
+
+:label_6
+popr r0
+push 1
+pushr r0
+ret 
+
+:fun_3
+movl r1 r0
+
+:label_8
+movl r0 [r1]
+pushr r0
+push 0
+cmp 
+pop 
+pop 
+jeq :label_7
+andl r0 255
+pushr r0
+outc 
+addl r1 1
+jmp :label_8
+
+:label_7
+push 10
+outc 
+ret 

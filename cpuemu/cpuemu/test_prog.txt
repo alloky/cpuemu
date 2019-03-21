@@ -1,0 +1,171 @@
+# mew 
+
+# comment line
+# :here
+# in
+# call :fact_rec
+# out
+# jmp :here
+
+:_beg
+in
+in
+in
+call :solve_sqr
+popr rax
+pushr rax
+out
+
+:_cycle
+pushr rax
+push 0
+cmp
+pop
+pop
+jle :_beg
+out
+subl rax 1
+jmp :_cycle
+
+
+
+:fact_rec
+popr rax
+movl rbx rax
+call :_fact_rec
+ret
+
+:_fact_base
+pushr rax
+push 0
+cmp
+pop
+pop
+jg :_base_more
+push 1
+ret
+:_base_more
+pushr rax
+ret
+
+:_fact_rec
+pushr rbx
+push 1
+cmp
+pop
+pop
+jg :_more
+call :_fact_base
+ret
+:_more
+subl rbx 1
+mull rax rbx
+call :_fact_rec
+ret
+
+:solve_sqr
+popr rcx
+popr rbx
+popr rax
+
+pushr rax
+push 0
+cmp
+pop
+pop
+
+jeq :_call_linear
+
+movl r1 rbx
+mull r1 r1
+movl r2 rax
+mull r2 4
+mull r2 rcx
+subl r1 r2
+
+pushr r1
+push 0
+cmp
+pop
+pop
+
+jg :_2_roots
+jeq :_1_root
+
+push 0
+ret
+
+:_2_roots
+sqrt r1
+
+movl r2 0
+subl r2 rbx
+subl r2 r1
+movl r3 r2
+divl r3 rax
+divl r3 2
+pushr r3
+
+movl r2 0
+subl r2 rbx
+addl r2 r1
+movl r3 r2
+divl r3 rax
+divl r3 2
+pushr r3
+
+push 2
+ret
+
+:_1_root
+movl r2 0
+subl r2 rbx
+divl r2 rax
+divl r2 2
+pushr r2
+push 1
+ret
+
+:_call_linear
+pushr rbx
+pushr rcx
+call :solve_linear
+ret
+
+# ax + b = 0
+:solve_linear
+popr rbx
+popr rax
+
+pushr rax
+push 0
+cmp
+pop
+pop
+
+jg :_lin_1_root
+
+pushr rbx
+push 0
+cmp
+pop
+pop
+
+jg :_lin_0_roots
+# infinite roots
+movl rax 0
+subl rax 1
+pushr rax
+ret
+
+:_lin_0_roots
+push 0
+ret
+
+:_lin_1_root
+movl r1 0
+subl r1 rbx
+divl r1 rax
+pushr r1
+push 1
+ret

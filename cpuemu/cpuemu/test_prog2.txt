@@ -1,0 +1,86 @@
+.stack_size 1024
+
+.text hw "Hello, user"
+.text inp "Please, input a number"
+.text fact_calced "Calced factorial value:"
+
+mew 
+
+# comment line
+
+
+movl r0 $hw
+call :println
+
+:here
+movl r0 $inp
+call :println
+in
+# push 4
+call :fib
+movl r0 $fact_calced
+call :println
+out
+jmp :here
+
+
+:fib
+popr r0
+popr rax
+pushr r0
+pushr rax
+push 1
+cmp
+pop
+pop
+jle :basic_fib
+
+subl rax 1
+
+pushr rax
+pushr rax
+call :fib
+popr rbx
+popr rax
+
+subl rax 1
+pushr rbx
+pushr rax
+call :fib
+popr rax
+popr rbx
+addl rbx rax
+
+popr r0
+pushr rbx
+pushr r0
+ret
+
+:basic_fib
+popr r0
+push 1
+pushr r0
+ret
+
+:println
+
+movl r1 r0
+
+:_print_loop
+movl r0 [r1]
+pushr r0
+push 0
+cmp
+pop
+pop
+jeq :end
+and r0 255
+pushr r0
+outc
+addl r1 1
+jmp :_print_loop
+
+:end
+push 10
+outc
+ret 
