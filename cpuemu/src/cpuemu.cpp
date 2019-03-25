@@ -94,8 +94,8 @@ void CpuEmu::__CMP_on_regs() {
 }
 
 void CpuEmu::CMP() {
-	rps[1] = st.pop<long long>();
 	rps[0] = st.pop<long long>();
+	rps[1] = st.pop<long long>();
 	__CMP_on_regs();
 	st.push<long long>(rps[1]);
 	st.push<long long>(rps[0]);
@@ -361,7 +361,7 @@ void CpuEmu::DIVL_RS() {
 		LEV_LOG(LL_ERR, "Zero divison occured on instruction " << instruction_pointer);
 		throw std::exception("zero division occured");
 	}
-	regs[reg_num_l] /= data[regs[reg_num_r]];
+	regs[reg_num_l] /= code[regs[reg_num_r]];
 }
 
 void CpuEmu::DIVL_SR() {
@@ -372,7 +372,7 @@ void CpuEmu::DIVL_SR() {
 		LEV_LOG(LL_ERR, "Zero divison occured on instruction " << instruction_pointer);
 		throw std::exception("zero division occured");
 	}
-	data[regs[reg_num_l]] /= regs[reg_num_r];
+	code[regs[reg_num_l]] /= regs[reg_num_r];
 }
 
 
@@ -383,7 +383,7 @@ void CpuEmu::DIVL_SS() {
 		LEV_LOG(LL_ERR, "Zero divison occured on instruction " << instruction_pointer);
 		throw std::exception("zero division occured");
 	}
-	data[regs[reg_num_l]] /= data[regs[reg_num_r]];
+	code[regs[reg_num_l]] /= code[regs[reg_num_r]];
 }
 
 

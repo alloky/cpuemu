@@ -1,4 +1,4 @@
-# This file was dissassenbled, with assumption that
+# This file was dissassembled, with assumption that
 # VBC code file was compiled with assembly version 0.0.2
 
 .stack_size 1024
