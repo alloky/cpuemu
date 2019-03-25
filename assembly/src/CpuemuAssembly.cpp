@@ -11,7 +11,7 @@
 
 void CpuemuAssembly::compile(const char* name, const char* path, const char* out_dir) {
 	FileLineProcesser flp;
-	flp.open(path + std::string("/") + name + ".txt");
+	flp.open(path + std::string("/") + name + ".vbcasm");
 	flp.read_lines();
 	auto lv = flp.make_LinesView();
 

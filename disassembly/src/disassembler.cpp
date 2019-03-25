@@ -17,7 +17,7 @@ void Disassembler::OpenFiles(const std::string& fileName) {
 	if (status != 0) {
 		throw std::exception("error while opening file");
 	}
-	status = resultDescriptor.open_write(fileName + "_disassemled.txt");
+	status = resultDescriptor.open_write(fileName + "_disassemled.vbcasm");
 	if (status != 0) {
 		throw std::exception("error while opening file");
 	}
