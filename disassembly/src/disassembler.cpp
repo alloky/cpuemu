@@ -33,7 +33,7 @@ void Disassembler::ParseHeaders()
 		throw std::exception("error while parsing headers : wrong signature");
 	}
 
-	resultDescriptor.write("# This file was dissassenbled, with assumption that", '\n');
+	resultDescriptor.write("# This file was dissassembled, with assumption that", '\n');
 	resultDescriptor.write("# VBC code file was compiled with assembly version " + version, '\n');
 	resultDescriptor.write("", '\n');
 
