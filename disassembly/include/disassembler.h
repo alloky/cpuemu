@@ -7,6 +7,7 @@
 #include "Signature.h"
 
 class Disassembler {
+	std::string version = "0.0.2";
 public:
 	void Disassembly(const std::string & pathToSrc);
 	void OpenFiles(const std::string & fileName);

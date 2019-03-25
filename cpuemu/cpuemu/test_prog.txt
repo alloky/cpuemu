@@ -1,171 +1,78 @@
-# mew 
+.stack_size 1024
+
+.text hw "Hello, user"
+.text inp "Please, input a number"
+.text fact_calced "Calced fibonacci value:"
+
+mew 
 
 # comment line
-# :here
-# in
-# call :fact_rec
-# out
-# jmp :here
 
-:_beg
+
+movl r0 $hw
+call :println
+
+:here
+movl r0 $inp
+call :println
 in
-in
-in
-call :solve_sqr
+# push 4
+call :fib
+movl r0 $fact_calced
+call :println
+out
+jmp :here
+
+
+:fib
+popr r0
 popr rax
-pushr rax
-out
+pushr r0
+cmpl rax 1
+jle :basic_fib
 
-:_cycle
-pushr rax
-push 0
-cmp
-pop
-pop
-jle :_beg
-out
 subl rax 1
-jmp :_cycle
 
-
-
-:fact_rec
-popr rax
-movl rbx rax
-call :_fact_rec
-ret
-
-:_fact_base
 pushr rax
-push 0
-cmp
-pop
-pop
-jg :_base_more
-push 1
-ret
-:_base_more
 pushr rax
-ret
-
-:_fact_rec
-pushr rbx
-push 1
-cmp
-pop
-pop
-jg :_more
-call :_fact_base
-ret
-:_more
-subl rbx 1
-mull rax rbx
-call :_fact_rec
-ret
-
-:solve_sqr
-popr rcx
+call :fib
 popr rbx
 popr rax
 
-pushr rax
-push 0
-cmp
-pop
-pop
-
-jeq :_call_linear
-
-movl r1 rbx
-mull r1 r1
-movl r2 rax
-mull r2 4
-mull r2 rcx
-subl r1 r2
-
-pushr r1
-push 0
-cmp
-pop
-pop
-
-jg :_2_roots
-jeq :_1_root
-
-push 0
-ret
-
-:_2_roots
-sqrt r1
-
-movl r2 0
-subl r2 rbx
-subl r2 r1
-movl r3 r2
-divl r3 rax
-divl r3 2
-pushr r3
-
-movl r2 0
-subl r2 rbx
-addl r2 r1
-movl r3 r2
-divl r3 rax
-divl r3 2
-pushr r3
-
-push 2
-ret
-
-:_1_root
-movl r2 0
-subl r2 rbx
-divl r2 rax
-divl r2 2
-pushr r2
-push 1
-ret
-
-:_call_linear
-pushr rbx
-pushr rcx
-call :solve_linear
-ret
-
-# ax + b = 0
-:solve_linear
-popr rbx
-popr rax
-
-pushr rax
-push 0
-cmp
-pop
-pop
-
-jg :_lin_1_root
-
-pushr rbx
-push 0
-cmp
-pop
-pop
-
-jg :_lin_0_roots
-# infinite roots
-movl rax 0
 subl rax 1
+pushr rbx
 pushr rax
+call :fib
+popr rax
+popr rbx
+addl rbx rax
+
+popr r0
+pushr rbx
+pushr r0
 ret
 
-:_lin_0_roots
-push 0
-ret
-
-:_lin_1_root
-movl r1 0
-subl r1 rbx
-divl r1 rax
-pushr r1
+:basic_fib
+popr r0
 push 1
+pushr r0
 ret
+
+:println
+
+movl r1 r0
+
+:_print_loop
+movl r0 [r1]
+cmpl r0 0
+jeq :end
+and r0 255
+pushr r0
+outc
+addl r1 1
+jmp :_print_loop
+
+:end
+push 10
+outc
+ret 

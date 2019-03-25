@@ -62,12 +62,13 @@ void CpuEmu::MOV(){
 	regs[r_ind] = val;
 }
 
+/*
 void CpuEmu::MOVL_REG_STATIC_STAR() {
 	++instruction_pointer;
 	char r_ind = extract_type<char>();
 	size_t addr = extract_type<size_t>();
 	regs[r_ind] = addr;
-}
+}*/
 
 
 /*
@@ -78,19 +79,84 @@ void CpuEmu::SQRT() {
 }
 */
 
-void CpuEmu::CMP() {
-	rps[0] = st.pop<long long>();
-	rps[1] = st.pop<long long>();
+
+// rps[2] == 0 -> equal
+// rps[2] == 1 -> less
+// rps[2] == 2 -> more
+void CpuEmu::__CMP_on_regs() {
 	rps[2] = 0;
 	if (rps[0] < rps[1]) {
-		rps[2] = 2;
-	}
-	if (rps[0] > rps[1]) {
 		rps[2] = 1;
 	}
+	if (rps[0] > rps[1]) {
+		rps[2] = 2;
+	}
+}
+
+void CpuEmu::CMP() {
+	rps[1] = st.pop<long long>();
+	rps[0] = st.pop<long long>();
+	__CMP_on_regs();
 	st.push<long long>(rps[1]);
 	st.push<long long>(rps[0]);
 	++instruction_pointer;
+}
+
+void CpuEmu::CMPR_RL() {
+	++instruction_pointer;
+	char reg_num = extract_type<char>();
+	long long val = extract_type<long long>();
+	rps[0] = regs[reg_num];
+	rps[1] = val;
+	__CMP_on_regs();
+}
+
+void CpuEmu::CMPR_RSZ() {
+	++instruction_pointer;
+	char reg_num = extract_type<char>();
+	size_t val = extract_type<size_t>();
+	rps[0] = regs[reg_num];
+	rps[1] = val;
+	__CMP_on_regs();
+}
+
+
+void CpuEmu::CMPR_RR() {
+	++instruction_pointer;
+	char reg_num_1 = extract_type<char>();
+	char reg_num_2= extract_type<char>();
+	rps[0] = regs[reg_num_1];
+	rps[1] = regs[reg_num_2];
+	__CMP_on_regs();
+}
+
+
+void CpuEmu::CMPR_RS() {
+	++instruction_pointer;
+	char reg_num_1 = extract_type<char>();
+	char reg_num_2 = extract_type<char>();
+	rps[0] = regs[reg_num_1];
+	rps[1] = code[regs[reg_num_2]];
+	__CMP_on_regs();
+}
+
+
+void CpuEmu::CMPR_SR() {
+	++instruction_pointer;
+	char reg_num_1 = extract_type<char>();
+	char reg_num_2 = extract_type<char>();
+	rps[0] = code[regs[reg_num_1]];
+	rps[1] = regs[reg_num_2];
+	__CMP_on_regs();
+}
+
+void CpuEmu::CMPR_SS() {
+	++instruction_pointer;
+	char reg_num_1 = extract_type<char>();
+	char reg_num_2 = extract_type<char>();
+	rps[0] = code[regs[reg_num_1]];
+	rps[1] = code[regs[reg_num_2]];
+	__CMP_on_regs();
 }
 
 void CpuEmu::JMP(){

@@ -24,8 +24,8 @@ DEF_CMD(OUTC, "outc", true, { PUSH_NUM(OUTC); })
 DEF_CMD(cmd ## _RL, text, (ARGS_SIZE == 2 && IS_REG(0) && IS_LONG(1)), { \
 	PUSH_NUM(cmd ## _RL); \
 }) \
-DEF_CMD(cmd ## _RSZ, text, (ARGS_SIZE == 2 && IS_REG(0) && IS_LONG(1)), { \
-	PUSH_NUM(cmd ## _RL); \
+DEF_CMD(cmd ## _RSZ, text, (ARGS_SIZE == 2 && IS_REG(0) && IS_STATIC_STAR(1)), { \
+	PUSH_NUM(cmd ## _RSZ); \
 }) \
 DEF_CMD(cmd ## _RR, text, (ARGS_SIZE == 2 && IS_REG(0) && IS_REG(1)),  { \
 	PUSH_NUM(cmd ## _RR); \
@@ -48,7 +48,8 @@ DEF_RL_RR_CMD(MODL, "modl")
 DEF_RL_RR_CMD(MOVL, "movl")
 DEF_RL_RR_CMD(ANDL, "andl")
 
-DEF_CMD(MOVL_REG_STATIC_STAR, "movl", (ARGS_SIZE == 2 && IS_REG(0) && IS_STATIC_STAR(1)), { PUSH_NUM(MOVL_RSZ) })
+
+//DEF_CMD(MOVL_REG_STATIC_STAR, "movl", (ARGS_SIZE == 2 && IS_REG(0) && IS_STATIC_STAR(1)), { PUSH_NUM(MOVL_RSZ) })
 
 DEF_CMD(PUSHR, "pushr", true, { PUSH_NUM(PUSHR); })
 DEF_CMD(POPR, "popr", true, { PUSH_NUM(POPR); })
@@ -58,6 +59,9 @@ DEF_CMD(MEW, "mew", true, { PUSH_NUM(MEW); })
 DEF_CMD(CALL, "call", true, { PUSH_NUM(CALL); })
 DEF_CMD(RET, "ret", true, { PUSH_NUM(RET); })
 
+
+DEF_RL_RR_CMD(CMPR, "cmpl")
+
 #ifdef  ASSEMBLING
 // Assembly derectives
 
@@ -66,4 +70,8 @@ DEF_CMD(DEFINE_TEXT_DATA, ".text", true, { PUSH_TEXT_DATA(line, first_word_end);
 
 #endif //  ASSEMBLING
 
+
+
+
+// Technical
 DEF_CMD(MAX_CMD_NUM, "MAX_CMD_NUM", true, {})

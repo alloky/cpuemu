@@ -32,7 +32,14 @@ void Disassembler::ParseHeaders()
 	if (!headers.verify()) {
 		throw std::exception("error while parsing headers : wrong signature");
 	}
+
+	resultDescriptor.write("# This file was dissassenbled, with assumption that", '\n');
+	resultDescriptor.write("# VBC code file was compiled with assembly version " + version, '\n');
+	resultDescriptor.write("", '\n');
+
+
 	resultDescriptor.write(".stack_size " + std::to_string(headers.stack_size), '\n');
+	resultDescriptor.write("", '\n');
 }
 
 void Disassembler::ParseData()
@@ -48,7 +55,9 @@ void Disassembler::ParseData()
 		resultDescriptor.write(".text ");
 		labels_names.insert({ total_size + data_start, "msg_" + std::to_string(count) });
 		resultDescriptor.write("msg_" + std::to_string(count), ' ');
-		resultDescriptor.write(currentLine, '\n');
+		resultDescriptor.write("", '\"');
+		resultDescriptor.write(currentLine, '\"');
+		resultDescriptor.write("", '\n');
 		total_size += curLineLength + 1;
 		count++;
 	}
@@ -189,11 +198,12 @@ void Disassembler::decode_cmd_MOV() {
 	decode_number();
 }
 
+/*
 void Disassembler::decode_cmd_MOVL_REG_STATIC_STAR() {
 	decode_register();
 	resultDescriptor.write("", ' ');
 	decode_static_data_label();
-}
+}*/
 
 
 /*
@@ -263,7 +273,7 @@ ST_ARITHM_INST(MOD, %)
 void Disassembler::decode_cmd_DIV() {
 }
 
-#define LEFTWISE_REG_INSTRUCTION(cmd, op) \
+#define LEFTWISE_REG_INSTRUCTION(cmd) \
 void Disassembler::decode_cmd_ ## cmd ## _RL() {\
 	decode_register(); \
 	resultDescriptor.write("", ' '); \
@@ -296,15 +306,16 @@ void Disassembler::decode_cmd_ ## cmd ## _SS() {	\
 }
 
 
-LEFTWISE_REG_INSTRUCTION(ADDL, +=)
-LEFTWISE_REG_INSTRUCTION(SUBL, -=)
-LEFTWISE_REG_INSTRUCTION(MULL, *=)
-LEFTWISE_REG_INSTRUCTION(MODL, %=)
-LEFTWISE_REG_INSTRUCTION(MOVL, =)
-LEFTWISE_REG_INSTRUCTION(ANDL, &=)
-LEFTWISE_REG_INSTRUCTION(DIVL, /=)
+LEFTWISE_REG_INSTRUCTION(ADDL)
+LEFTWISE_REG_INSTRUCTION(SUBL)
+LEFTWISE_REG_INSTRUCTION(MULL)
+LEFTWISE_REG_INSTRUCTION(MODL)
+LEFTWISE_REG_INSTRUCTION(MOVL)
+LEFTWISE_REG_INSTRUCTION(ANDL)
+LEFTWISE_REG_INSTRUCTION(DIVL)
+LEFTWISE_REG_INSTRUCTION(CMPR)
 
-#undef RR_LL_REG_INSTRUCTION
+#undef LEFTWISE_REG_INSTRUCTION
 
 
 // ---  Section for first pass size calcs         --- //
@@ -353,10 +364,11 @@ void Disassembler::first_run_MOV() {
 	total_size += sizeof(long long);
 }
 
+/*
 void Disassembler::first_run_MOVL_REG_STATIC_STAR() {
 	total_size += sizeof(char);
 	total_size += sizeof(size_t);
-}
+}*/
 
 void Disassembler::first_run_CMP() {
 }
@@ -417,7 +429,7 @@ ST_ARITHM_INST(MOD, %)
 void Disassembler::first_run_DIV() {
 }
 
-#define LEFTWISE_REG_INSTRUCTION(cmd, op) \
+#define LEFTWISE_REG_INSTRUCTION(cmd) \
 void Disassembler::first_run_ ## cmd ## _RL() {\
 	total_size += sizeof(char); \
 	total_size += sizeof(long long); \
@@ -444,13 +456,14 @@ void Disassembler::first_run_ ## cmd ## _SS() {	\
 }
 
 
-LEFTWISE_REG_INSTRUCTION(ADDL, +=)
-LEFTWISE_REG_INSTRUCTION(SUBL, -=)
-LEFTWISE_REG_INSTRUCTION(MULL, *=)
-LEFTWISE_REG_INSTRUCTION(MODL, %=)
-LEFTWISE_REG_INSTRUCTION(MOVL, =)
-LEFTWISE_REG_INSTRUCTION(ANDL, &=)
-LEFTWISE_REG_INSTRUCTION(DIVL, /=)
+LEFTWISE_REG_INSTRUCTION(ADDL)
+LEFTWISE_REG_INSTRUCTION(SUBL)
+LEFTWISE_REG_INSTRUCTION(MULL)
+LEFTWISE_REG_INSTRUCTION(MODL)
+LEFTWISE_REG_INSTRUCTION(MOVL)
+LEFTWISE_REG_INSTRUCTION(ANDL)
+LEFTWISE_REG_INSTRUCTION(DIVL)
+LEFTWISE_REG_INSTRUCTION(CMPR)
 
-#undef RR_LL_REG_INSTRUCTION
+#undef LEFTWISE_REG_INSTRUCTION
 

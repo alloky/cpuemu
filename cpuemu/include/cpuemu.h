@@ -102,5 +102,7 @@ void CMD ## (); \
 #include "cpuemu-cmd-defs.h"
 #undef DEF_CMD
 
+	void __CMP_on_regs();
+
 };
 

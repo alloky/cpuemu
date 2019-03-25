@@ -3,6 +3,8 @@
 *.slo
 *.lo
 *.o
+*.opendb
+*.db
 
 # Compiled Dynamic libraries
 *.so

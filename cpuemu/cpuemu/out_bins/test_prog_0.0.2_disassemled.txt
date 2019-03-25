@@ -1,7 +1,11 @@
+# This file was dissassenbled, with assumption that
+# VBC code file was compiled with assembly version 0.0.2
+
 .stack_size 1024
-.text msg_0 Hello, user
-.text msg_1 Please, input a number
-.text msg_2 Calced factorial value:
+
+.text msg_0 "Hello, user"
+.text msg_1 "Please, input a number"
+.text msg_2 "Calced fibonacci value:"
 
 mew 
 movl r0 $msg_0
@@ -21,11 +25,7 @@ jmp :label_5
 popr r0
 popr rax
 pushr r0
-pushr rax
-push 1
-cmp 
-pop 
-pop 
+cmpl rax 1
 jle :label_6
 subl rax 1
 pushr rax
@@ -56,11 +56,7 @@ movl r1 r0
 
 :label_8
 movl r0 [r1]
-pushr r0
-push 0
-cmp 
-pop 
-pop 
+cmpl r0 0
 jeq :label_7
 andl r0 255
 pushr r0
